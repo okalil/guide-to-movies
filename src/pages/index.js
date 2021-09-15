@@ -1,7 +1,15 @@
 import Head from 'next/head';
 import Box from '../components/Box';
+import useFetch from '../hooks/useFetch';
+
+import { imageBaseUrl } from '../constants/imageUrl';
+import { w185 } from '../constants/posterSizes';
 
 export default function Home() {
+  const { data } = useFetch('/search/movie?query=Vingadores');
+
+  console.log(!data ? 'Loading' : 'resposta chegou');
+
   return (
     <div>
       <Head>
@@ -26,12 +34,23 @@ export default function Home() {
         </p>
       </aside>
       <main>
-        <Box>
-          <img src="" alt="" />
-          <h4>Os Vingadores</h4>
-          <span>25 de abril de 2012</span>
-          <p>Loki, o irmão de Thor ....</p>
-        </Box>
+        {!data ? (
+          <h4>Carregando...</h4>
+        ) : data.results ? (
+          data.results.map(item => (
+            <Box key={item.id}>
+              <img
+                src={imageBaseUrl.concat(w185, item.poster_path)}
+                alt="Poster"
+              />
+              <h4>{item.title}</h4>
+              <span>{item.release_date}</span>
+              <p>{item.overview}</p>
+            </Box>
+          ))
+        ) : (
+          <h4>Não foi possível carregar os dados!</h4>
+        )}
       </main>
     </div>
   );
