@@ -1,23 +1,22 @@
 import Head from 'next/head';
-import Box from '../components/Box';
-import useFetch from '../hooks/useFetch';
 
-import { imageBaseUrl } from '../constants/imageUrl';
 import { w185 } from '../constants/posterSizes';
+import { imageBaseUrl } from '../constants/imageUrl';
+import { useSearch } from '../contexts/SearchContext';
+
+import Box from '../components/Box';
+import SearchControl from '../components/SearchControl';
 
 export default function Home() {
-  const { data } = useFetch('/search/movie?query=Vingadores');
-
-  console.log(!data ? 'Loading' : 'resposta chegou');
+  const { search } = useSearch();
+  const { data } = search;
 
   return (
     <div>
       <Head>
         <title>Guia dos Filmes | Encontre o seu filme aqui!</title>
       </Head>
-      <div>
-        <input placeholder="Procurar filme..." />
-      </div>
+      <SearchControl />
       <aside>
         <Box>
           <span>Resultados da Busca</span>
@@ -34,13 +33,15 @@ export default function Home() {
         </p>
       </aside>
       <main>
-        {!data ? (
-          <h4>Carregando...</h4>
-        ) : data.results ? (
+        {!data ? null : data.results && data.total_results ? (
           data.results.map(item => (
             <Box key={item.id}>
               <img
-                src={imageBaseUrl.concat(w185, item.poster_path)}
+                src={
+                  item.poster_path
+                    ? imageBaseUrl.concat(w185, item.poster_path)
+                    : ''
+                }
                 alt="Poster"
               />
               <h4>{item.title}</h4>
