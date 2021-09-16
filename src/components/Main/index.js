@@ -1,13 +1,18 @@
+import { useRef } from 'react';
+
 import { useSearch } from '../../contexts/SearchContext';
 import { w185 } from '../../constants/posterSizes';
 import { imageBaseUrl } from '../../constants/imageUrl';
 import filterByYear from '../../utils/filterByYear';
 
+import Modal from '../Modal';
 import { InfoContainer, ResultsContainer, ResultsItem } from './styles';
 
 export default function Main({ currentFilter }) {
   const { search } = useSearch();
   const { data, keyword } = search;
+
+  const modalRef = useRef(null);
 
   const [_, year] = keyword.split('y:');
 
@@ -25,7 +30,7 @@ export default function Main({ currentFilter }) {
       {!filtered ? null : data.results && data.total_results ? (
         <ul>
           {filtered.map(item => {
-            const { media_type, overview } = item;
+            const { media_type, overview, id } = item;
 
             const getDate = date => {
               const then = new Date(date);
@@ -56,7 +61,10 @@ export default function Main({ currentFilter }) {
             }
 
             return (
-              <ResultsItem key={item.id}>
+              <ResultsItem
+                key={id}
+                onClick={() => modalRef.current?.openModal()}
+              >
                 <img
                   src={image ? imageBaseUrl.concat(w185, image) : ''}
                   alt="Poster"
@@ -73,6 +81,7 @@ export default function Main({ currentFilter }) {
       ) : (
         <h4>Não foi possível carregar os dados!</h4>
       )}
+      <Modal ref={modalRef}>Você abriu uma modal!</Modal>
     </ResultsContainer>
   );
 }
