@@ -15,8 +15,10 @@ export default function SearchControl() {
     const formData = new FormData(e.target);
     const keyword = formData.get('search');
 
+    const [query] = keyword.split('y:');
+
     try {
-      const { data } = await axios.get(`/search/movie?query=${keyword}`, {
+      const { data } = await axios.get(`/search/multi?query=${query}`, {
         baseURL,
       });
 

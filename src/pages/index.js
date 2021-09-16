@@ -1,15 +1,17 @@
 import Head from 'next/head';
+import { useState } from 'react';
 
-import { w185 } from '../constants/posterSizes';
-import { imageBaseUrl } from '../constants/imageUrl';
 import { useSearch } from '../contexts/SearchContext';
 
-import Box from '../components/Box';
 import SearchControl from '../components/SearchControl';
+import FiltersBox from '../components/FiltersBox';
+import Main from '../components/Main';
 
 export default function Home() {
   const { search } = useSearch();
-  const { data } = search;
+  const { data, keyword } = search;
+
+  const [currentFilter, setFilter] = useState('all');
 
   return (
     <div>
@@ -18,41 +20,13 @@ export default function Home() {
       </Head>
       <SearchControl />
       <aside>
-        <Box>
-          <span>Resultados da Busca</span>
-          <ul>
-            <li>
-              <span>Filmes</span>
-              <span>48</span>
-            </li>
-          </ul>
-        </Box>
+        <FiltersBox {...{ currentFilter, setFilter }} />
         <p>
           Dica: Você pode usar o filtro 'y:' para limitar seus resultados por
           ano. Exemplo: 'tropa de elite y:2007'
         </p>
       </aside>
-      <main>
-        {!data ? null : data.results && data.total_results ? (
-          data.results.map(item => (
-            <Box key={item.id}>
-              <img
-                src={
-                  item.poster_path
-                    ? imageBaseUrl.concat(w185, item.poster_path)
-                    : ''
-                }
-                alt="Poster"
-              />
-              <h4>{item.title}</h4>
-              <span>{item.release_date}</span>
-              <p>{item.overview}</p>
-            </Box>
-          ))
-        ) : (
-          <h4>Não foi possível carregar os dados!</h4>
-        )}
-      </main>
+      <Main {...{ currentFilter }} />
     </div>
   );
 }
