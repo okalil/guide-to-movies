@@ -3,7 +3,7 @@ import { w185 } from '../../constants/posterSizes';
 import { imageBaseUrl } from '../../constants/imageUrl';
 import filterByYear from '../../utils/filterByYear';
 
-import Box from '../Box';
+import { InfoContainer, ResultsContainer, ResultsItem } from './styles';
 
 export default function Main({ currentFilter }) {
   const { search } = useSearch();
@@ -18,58 +18,62 @@ export default function Main({ currentFilter }) {
         ),
         year
       )
-    : undefined;
+    : null;
 
   return (
-    <main>
-      {!data ? null : data.results && data.total_results ? (
-        filtered.map(item => {
-          const { media_type } = item;
+    <ResultsContainer>
+      {!filtered ? null : data.results && data.total_results ? (
+        <ul>
+          {filtered.map(item => {
+            const { media_type, overview } = item;
 
-          const getDate = date => {
-            const then = new Date(date);
-            return `${then.getDate()} de ${
-              months[then.getMonth()]
-            } de ${then.getFullYear()}`;
-          };
+            const getDate = date => {
+              const then = new Date(date);
+              return `${then.getDate()} de ${
+                months[then.getMonth()]
+              } de ${then.getFullYear()}`;
+            };
 
-          let date, name, image;
-          switch (media_type) {
-            case 'movie':
-              date = getDate(item.release_date);
-              name = item.title;
-              image = item.poster_path;
-              break;
-            case 'tv':
-              date = getDate(item.first_air_date);
-              name = item.name;
-              image = item.poster_path;
-              break;
-            case 'person':
-              date = item.birthday;
-              name = item.name;
-              image = item.profile_path;
-              break;
-            default:
-              date = undefined;
-          }
-          console.log(new Date(date));
-          return (
-            <Box key={item.id}>
-              <img
-                src={image ? imageBaseUrl.concat(w185, image) : ''}
-                alt="Poster"
-              />
-              <h4>{name}</h4>
-              <span>{date}</span>
-              <p>{item.overview}</p>
-            </Box>
-          );
-        })
+            let date, name, image;
+            switch (media_type) {
+              case 'movie':
+                date = getDate(item.release_date);
+                name = item.title;
+                image = item.poster_path;
+                break;
+              case 'tv':
+                date = getDate(item.first_air_date);
+                name = item.name;
+                image = item.poster_path;
+                break;
+              case 'person':
+                date = item.birthday;
+                name = item.name;
+                image = item.profile_path;
+                break;
+              default:
+                date = undefined;
+            }
+
+            return (
+              <ResultsItem key={item.id}>
+                <img
+                  src={image ? imageBaseUrl.concat(w185, image) : ''}
+                  alt="Poster"
+                />
+                <InfoContainer>
+                  <h4>{name}</h4>
+                  <span>{date}</span>
+                  <p>{overview}</p>
+                </InfoContainer>
+              </ResultsItem>
+            );
+          })}
+        </ul>
       ) : (
         <h4>Não foi possível carregar os dados!</h4>
       )}
-    </main>
+    </ResultsContainer>
   );
 }
 
