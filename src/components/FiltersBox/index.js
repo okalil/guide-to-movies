@@ -4,7 +4,7 @@ import { useSearch } from '../../contexts/SearchContext';
 import filterByYear from '../../utils/filterByYear';
 
 import Box from '../Box';
-import { Filter } from './styles';
+import { Title, Filter } from './styles';
 
 export default function FiltersBox({ currentFilter, setFilter }) {
   const { search } = useSearch();
@@ -29,22 +29,29 @@ export default function FiltersBox({ currentFilter, setFilter }) {
     { name: 'Pessoas', totalResults: totalResults('person'), type: 'person' },
   ];
 
-  const focusStyle = { background: '#f6f6f6', fontWeight: 600 };
-
   return (
     <Box>
-      <span>Resultados da Busca</span>
+      <Title>Resultados da Busca</Title>
       <ul>
-        {filters.map(({ name, totalResults, type }) => (
-          <Filter
-            onClick={() => setFilter(currentFilter === type ? 'all' : type)}
-            style={currentFilter === type ? focusStyle : undefined}
-            key={name}
-          >
-            <span>{name}</span>
-            <span>{totalResults}</span>
-          </Filter>
-        ))}
+        {filters.map(({ name, totalResults, type }) => {
+          const selected = currentFilter === type;
+          return (
+            <Filter
+              onClick={() => setFilter(selected ? 'all' : type)}
+              style={
+                selected
+                  ? { background: '#ebebeb', fontWeight: 600 }
+                  : undefined
+              }
+              key={name}
+            >
+              <span>{name}</span>
+              <span style={selected ? { background: '#fff' } : undefined}>
+                {totalResults}
+              </span>
+            </Filter>
+          );
+        })}
       </ul>
     </Box>
   );

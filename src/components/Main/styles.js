@@ -11,6 +11,11 @@ export const ResultsItem = styled(Box).attrs({ as: 'li' })`
     margin-top: 1rem;
   }
 
+  &:hover {
+    cursor: pointer;
+    box-shadow: 0px 0px 3px 3px #00000012;
+  }
+
   img {
     width: 95px;
     max-height: 100%;
