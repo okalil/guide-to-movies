@@ -11,6 +11,8 @@ const GlobalStyle = createGlobalStyle`
     background: ${({ theme }) => theme.colors.bgGeneral};
     font: 400 1rem 'Open Sans', sans-serif;
   }
+
+  ul, li {list-style: none;}
 `;
 
 export default GlobalStyle;

@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 import Box from '../Box';
 
-export const ResultsContainer = styled.main``;
-
 export const ResultsItem = styled(Box).attrs({ as: 'li' })`
   display: flex;
 

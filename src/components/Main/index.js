@@ -1,20 +1,22 @@
 import axios from 'axios';
-import { useEffect, useRef, useState } from 'react';
+import { useRef, useState } from 'react';
 
 import { useSearch } from '../../contexts/SearchContext';
-import { w185, w342, w92 } from '../../constants/posterSizes';
+import { w185, w342 } from '../../constants/posterSizes';
 import { imageBaseUrl } from '../../constants/imageUrl';
 import filterByYear from '../../utils/filterByYear';
 
 import Modal from '../Modal';
 import MovieDetails from './MovieDetails';
-import { InfoContainer, ResultsContainer, ResultsItem } from './styles';
+import { InfoContainer, ResultsItem } from './styles';
 
 const baseURL = '/api/moviedb?url=';
 
-export default function Main({ currentFilter }) {
+export default function Main({ currentFilter, historyData }) {
   const { search } = useSearch();
-  const { data, keyword } = search;
+  const { keyword } = search;
+
+  const data = historyData || search.data;
 
   const [_, year] = keyword.split('y:');
 
@@ -32,7 +34,7 @@ export default function Main({ currentFilter }) {
   const [details, setDetails] = useState({});
 
   return (
-    <ResultsContainer>
+    <>
       {!filtered ? null : data.results && data.total_results ? (
         <ul>
           {filtered.map(item => {
@@ -77,7 +79,9 @@ export default function Main({ currentFilter }) {
                       console.log('Error: ', error);
                     }
                   }
-                  await getDetails(`/${media_type}/${id}?append_to_response=credits`);
+                  await getDetails(
+                    `/${media_type}/${id}?append_to_response=credits`
+                  );
                   modalRef.current?.openModal();
                 }}
               >
@@ -100,7 +104,7 @@ export default function Main({ currentFilter }) {
       <Modal ref={modalRef}>
         <ModalChildren {...{ details }} />
       </Modal>
-    </ResultsContainer>
+    </>
   );
 }
 
