@@ -19,9 +19,12 @@ export default function ResultsHistory({ currentFilter }) {
           ? 'Faça uma nova busca e veja o seu histórico aqui.'
           : 'Histórico de resultados'}
       </h2>
-      {history.map((result, i) => {
-        return <Main key={i} {...{ currentFilter, historyData: result }} />;
-      })}
+      {history
+        .reverse()
+        .slice(0, 100)
+        .map((result, i) => {
+          return <Main key={i} {...{ currentFilter, historyData: result }} />;
+        })}
     </Container>
   );
 }

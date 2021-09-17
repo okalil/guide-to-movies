@@ -30,7 +30,7 @@ export default function Home() {
           Histórico
         </HistoryButton>
       </Header>
-      {search.data ? (
+      {search.data || showHistory ? (
         <ResultsContainer>
           <Aside>
             <FiltersBox {...{ currentFilter, setFilter }} />

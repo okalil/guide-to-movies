@@ -9,7 +9,20 @@ export function SearchContextProvider({ children }) {
   const { data } = search;
 
   useEffect(() => {
-    if (data && data.results[0]) setHistory([...history, data]);
+    const history = JSON.parse(localStorage.getItem('movies-results-history'));
+
+    if (history) setHistory(history);
+  }, []);
+
+  useEffect(() => {
+    if (data && data.results[0]) {
+      const newHistory = [...history, data];
+      setHistory(newHistory);
+      localStorage.setItem(
+        'movies-results-history',
+        JSON.stringify(newHistory)
+      );
+    }
     return;
   }, [data]);
 
