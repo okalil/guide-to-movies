@@ -1,15 +1,21 @@
 import styled from 'styled-components';
+import Image from 'next/image';
 
 export const Wrapper = styled.div`
   overflow: auto;
   width: min(90vw, 520px);
-  height: min(95vh, 650px);
+  max-height: 95vh;
 `;
 
-export const Backdrop = styled.img`
+export const Backdrop = styled.div`
+  position: relative;
+  height: 200px;
   width: 100%;
-  border-top-left-radius: 7px;
-  border-top-right-radius: 7px;
+
+  img {
+    border-top-left-radius: 7px;
+    border-top-right-radius: 7px;
+  }
 `;
 
 export const InlineInfo = styled.div`

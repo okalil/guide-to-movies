@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import React from 'react';
 
 import { imageBaseUrl } from '../../../constants/imageUrl';
@@ -20,11 +21,20 @@ export default function MovieDetails({ details }) {
 
   return (
     <Wrapper>
-      <Backdrop
-        style={{ width: '100%' }}
-        src={imageBaseUrl + w342 + details.backdrop_path}
-        alt="Backdrop"
-      />
+      <Backdrop>
+        <Image
+          width={192}
+          height={192}
+          layout="fill"
+          objectFit="cover"
+          src={
+            details.backdrop_path
+              ? imageBaseUrl + w342 + details.backdrop_path
+              : '/image-not-available.jpg'
+          }
+          alt="Backdrop"
+        />
+      </Backdrop>
       <Container>
         <h2>{details.title}</h2>
         <InlineInfo>
