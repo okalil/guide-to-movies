@@ -17,6 +17,8 @@ export default function SearchControl() {
 
     const [query] = keyword.split('y:');
 
+    if (!query.trim()) return;
+
     try {
       const { data } = await axios.get(`/search/multi?query=${query}`, {
         baseURL,
