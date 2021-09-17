@@ -3,9 +3,8 @@ import { useSearch } from '../../contexts/SearchContext';
 import Main from '../Main';
 
 export const Container = styled.div`
-  text-align: center;
-
   > :first-child {
+    text-align: center;
     margin-bottom: 0.75rem;
   }
 `;

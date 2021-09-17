@@ -1,14 +1,13 @@
 import Image from 'next/image';
 import React from 'react';
 
-import { imageBaseUrl } from '../../../constants/imageUrl';
-import { w342 } from '../../../constants/posterSizes';
+import Details from '../Details';
 
 import Overview from '../Overview';
-import { Wrapper, Container, Backdrop, InlineInfo } from './styles';
+import { Container, InlineInfo } from './styles';
 
 export default function MovieDetails({ details }) {
-  const { budget, genres, overview, original_title, runtime } = details;
+  const { budget, genres, overview, original_title, runtime, title } = details;
   const [year] = details.release_date.split('-');
 
   const detailed = [
@@ -20,23 +19,10 @@ export default function MovieDetails({ details }) {
   ];
 
   return (
-    <Wrapper>
-      <Backdrop>
-        <Image
-          width={192}
-          height={192}
-          layout="fill"
-          objectFit="cover"
-          src={
-            details.backdrop_path
-              ? imageBaseUrl + w342 + details.backdrop_path
-              : '/image-not-available.jpg'
-          }
-          alt="Backdrop"
-        />
-      </Backdrop>
+    <Details
+      {...{ title, imagePath: details.backdrop_path || details.poster_path }}
+    >
       <Container>
-        <h2>{details.title}</h2>
         <InlineInfo>
           <span>{year}</span>
           <span>
@@ -69,6 +55,6 @@ export default function MovieDetails({ details }) {
           </div>
         ))}
       </Container>
-    </Wrapper>
+    </Details>
   );
 }

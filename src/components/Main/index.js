@@ -2,12 +2,14 @@ import axios from 'axios';
 import { useRef, useState } from 'react';
 
 import { useSearch } from '../../contexts/SearchContext';
-import { w185, w342 } from '../../constants/posterSizes';
+import { w185 } from '../../constants/posterSizes';
 import { imageBaseUrl } from '../../constants/imageUrl';
+
 import filterByYear from '../../utils/filterByYear';
+import convertDate from '../../utils/convertDate';
 
 import Modal from '../Modal';
-import MovieDetails from './MovieDetails';
+import Details from './Details';
 import { InfoContainer, ResultsItem } from './styles';
 
 const baseURL = '/api/moviedb?url=';
@@ -40,22 +42,15 @@ export default function Main({ currentFilter, historyData }) {
           {filtered.map(item => {
             const { media_type, overview, id } = item;
 
-            const getDate = date => {
-              const then = new Date(date);
-              return `${then.getDate()} de ${
-                months[then.getMonth()]
-              } de ${then.getFullYear()}`;
-            };
-
             let date, name, image;
             switch (media_type) {
               case 'movie':
-                date = getDate(item.release_date);
+                date = convertDate(item.release_date);
                 name = item.title;
                 image = item.poster_path;
                 break;
               case 'tv':
-                date = getDate(item.first_air_date);
+                date = convertDate(item.first_air_date);
                 name = item.name;
                 image = item.poster_path;
                 break;
@@ -86,7 +81,11 @@ export default function Main({ currentFilter, historyData }) {
                 }}
               >
                 <img
-                  src={image ? imageBaseUrl.concat(w185, image) : ''}
+                  src={
+                    image
+                      ? imageBaseUrl.concat(w185, image)
+                      : '/image-not-available.jpg'
+                  }
                   alt="Poster"
                 />
                 <InfoContainer>
@@ -99,46 +98,13 @@ export default function Main({ currentFilter, historyData }) {
           })}
         </ul>
       ) : (
-        <h4>Não foi possível carregar os dados!</h4>
+        <h4 style={{ textAlign: 'center' }}>
+          Não foi possível carregar os dados!
+        </h4>
       )}
       <Modal ref={modalRef}>
-        <ModalChildren {...{ details }} />
+        <Details {...{ details }} />
       </Modal>
     </>
   );
 }
-
-function ModalChildren({ details }) {
-  switch (details.media_type) {
-    case 'movie':
-      return <MovieDetails {...{ details }} />;
-    case 'tv':
-      return (
-        <div>
-          <img
-            src={imageBaseUrl + w342 + details.backdrop_path}
-            alt="Backdrop"
-          />
-        </div>
-      );
-    case 'person':
-      return 'Person';
-    default:
-      return null;
-  }
-}
-
-const months = [
-  'janeiro',
-  'fevereiro',
-  'março',
-  'abril',
-  'maio',
-  'junho',
-  'julho',
-  'agosto',
-  'setembro',
-  'outubro',
-  'novembro',
-  'dezembro',
-];

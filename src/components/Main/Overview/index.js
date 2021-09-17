@@ -15,7 +15,7 @@ const ControlButton = styled.button`
 export default function Overview({ overview }) {
   const [detailed, setDetailed] = useState(false);
 
-  const max = 120
+  const max = 115;
 
   return (
     <>
@@ -32,7 +32,7 @@ export default function Overview({ overview }) {
           overview
         )}
       </p>
-      {overview.length > 200 && (
+      {overview.length > max && (
         <ControlButton onClick={() => setDetailed(b => !b)}>
           Ver {detailed ? 'menos' : 'mais'}
         </ControlButton>
