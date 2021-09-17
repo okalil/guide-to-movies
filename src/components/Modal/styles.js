@@ -10,6 +10,7 @@ const ModalOverlay = styled.div`
 
 const ModalBox = styled(Box)`
   margin: auto;
+  border: 0;
 `;
 
 export { ModalOverlay, ModalBox };

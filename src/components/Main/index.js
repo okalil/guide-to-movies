@@ -1,18 +1,20 @@
-import { useRef } from 'react';
+import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
 
 import { useSearch } from '../../contexts/SearchContext';
-import { w185 } from '../../constants/posterSizes';
+import { w185, w342, w92 } from '../../constants/posterSizes';
 import { imageBaseUrl } from '../../constants/imageUrl';
 import filterByYear from '../../utils/filterByYear';
 
 import Modal from '../Modal';
+import MovieDetails from './MovieDetails';
 import { InfoContainer, ResultsContainer, ResultsItem } from './styles';
+
+const baseURL = '/api/moviedb?url=';
 
 export default function Main({ currentFilter }) {
   const { search } = useSearch();
   const { data, keyword } = search;
-
-  const modalRef = useRef(null);
 
   const [_, year] = keyword.split('y:');
 
@@ -24,6 +26,10 @@ export default function Main({ currentFilter }) {
         year
       )
     : null;
+
+  const modalRef = useRef(null);
+
+  const [details, setDetails] = useState({});
 
   return (
     <ResultsContainer>
@@ -52,7 +58,6 @@ export default function Main({ currentFilter }) {
                 image = item.poster_path;
                 break;
               case 'person':
-                date = item.birthday;
                 name = item.name;
                 image = item.profile_path;
                 break;
@@ -63,7 +68,18 @@ export default function Main({ currentFilter }) {
             return (
               <ResultsItem
                 key={id}
-                onClick={() => modalRef.current?.openModal()}
+                onClick={async () => {
+                  async function getDetails(url) {
+                    try {
+                      const { data } = await axios.get(url, { baseURL });
+                      setDetails({ ...data, media_type });
+                    } catch (error) {
+                      console.log('Error: ', error);
+                    }
+                  }
+                  await getDetails(`/${media_type}/${id}?append_to_response=credits`);
+                  modalRef.current?.openModal();
+                }}
               >
                 <img
                   src={image ? imageBaseUrl.concat(w185, image) : ''}
@@ -81,9 +97,31 @@ export default function Main({ currentFilter }) {
       ) : (
         <h4>Não foi possível carregar os dados!</h4>
       )}
-      <Modal ref={modalRef}>Você abriu uma modal!</Modal>
+      <Modal ref={modalRef}>
+        <ModalChildren {...{ details }} />
+      </Modal>
     </ResultsContainer>
   );
+}
+
+function ModalChildren({ details }) {
+  switch (details.media_type) {
+    case 'movie':
+      return <MovieDetails {...{ details }} />;
+    case 'tv':
+      return (
+        <div>
+          <img
+            src={imageBaseUrl + w342 + details.backdrop_path}
+            alt="Backdrop"
+          />
+        </div>
+      );
+    case 'person':
+      return 'Person';
+    default:
+      return null;
+  }
 }
 
 const months = [
