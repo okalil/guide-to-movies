@@ -32,13 +32,16 @@ export default function Home() {
       </Header>
       {search.data || showHistory ? (
         <ResultsContainer>
-          <Aside>
-            <FiltersBox {...{ currentFilter, setFilter }} />
-            <p>
-              Dica: Você pode usar o filtro 'y:' para limitar seus resultados
-              por ano. Exemplo: 'tropa de elite y:2007'
-            </p>
-          </Aside>
+          {search.data && (
+            <Aside>
+              <FiltersBox {...{ currentFilter, setFilter }} />
+              <p>
+                Dica: Você pode usar o filtro 'y:' para limitar seus resultados
+                por ano. Exemplo: 'tropa de elite y:2007'
+              </p>
+            </Aside>
+          )}
+
           {showHistory ? (
             <ResultsHistory {...{ currentFilter }} />
           ) : (

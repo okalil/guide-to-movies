@@ -16,11 +16,15 @@ export const ResultsItem = styled(Box).attrs({ as: 'li' })`
     box-shadow: 0px 0px 3px 3px #00000012;
   }
 
-  img {
+  > :first-child {
+    position: relative;
     width: 95px;
     max-height: 100%;
-    border-top-left-radius: 7px;
-    border-bottom-left-radius: 7px;
+
+    img {
+      border-top-left-radius: 7px;
+      border-bottom-left-radius: 7px;
+    }
   }
 `;
 

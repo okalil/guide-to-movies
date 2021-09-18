@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Image from 'next/image';
 import { useRef, useState } from 'react';
 
 import { useSearch } from '../../contexts/SearchContext';
@@ -74,20 +75,21 @@ export default function Main({ currentFilter, historyData }) {
                       console.log('Error: ', error);
                     }
                   }
-                  await getDetails(
-                    `/${media_type}/${id}?append_to_response=credits`
-                  );
+                  await getDetails(`/${media_type}/${id}`);
                   modalRef.current?.openModal();
                 }}
               >
-                <img
-                  src={
-                    image
-                      ? imageBaseUrl.concat(w185, image)
-                      : '/image-not-available.jpg'
-                  }
-                  alt="Poster"
-                />
+                <div>
+                  <Image
+                    layout="fill"
+                    src={
+                      image
+                        ? imageBaseUrl.concat(w185, image)
+                        : '/image-not-available.jpg'
+                    }
+                    alt="Poster"
+                  />
+                </div>
                 <InfoContainer>
                   <h4>{name}</h4>
                   <span>{date}</span>
