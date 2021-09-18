@@ -123,21 +123,25 @@ function Switch({ details }) {
             </span>
           )}
 
-          <span>
-            <strong>Popularidade:</strong> {details.popularity}
-          </span>
+          {details.popularity && (
+            <span>
+              <strong>Popularidade:</strong> {details.popularity}
+            </span>
+          )}
         </InlineInfo>
         <Overview {...{ overview }} />
         <hr style={{ margin: '0.25rem 0' }} />
-        <div>
-          <strong>Gêneros: </strong>
-          {details.genres.map((item, index) => (
-            <span key={item.id}>
-              {!!index && ' | '}
-              {item.name}
-            </span>
-          ))}
-        </div>
+        {details.genres[0] && (
+          <div>
+            <strong>Gêneros: </strong>
+            {details.genres.map((item, index) => (
+              <span key={item.id}>
+                {!!index && ' | '}
+                {item.name}
+              </span>
+            ))}
+          </div>
+        )}
         {detailed.map(({ name, content }) =>
           content ? (
             <div key={name}>
@@ -170,7 +174,6 @@ function Switch({ details }) {
     ];
     return (
       <Container>
-        {/* <InlineInfo> */}
         {details.birthday && (
           <span>
             {birthYear}-{deathYear}
